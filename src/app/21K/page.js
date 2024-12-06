@@ -1,16 +1,13 @@
 "use client";
 import React, { useState, useEffect } from "react";
 
+
 const checkpoints = [
-  { id: 11, label: "Start" },
-  { id: 1, label: "Checkpoint 1" },
-  { id: 2, label: "Checkpoint 2" },
-  { id: 3, label: "Checkpoint 3" },
-  { id: 4, label: "Checkpoint 4" },
-  { id: 5, label: "Checkpoint 5" },
-  { id: 6, label: "Checkpoint 2 - 42K" }, // New column added before Finish
-  { id: 7, label: "Finish" },
-];
+    { id: 11, label: "Start" },
+    { id: 6, label: "Checkpoint 2" },
+    { id: 5, label: "Checkpoint 3/5" },
+    { id: 7, label: "Finish" },
+  ]; // Specified checkpoints
 
 const ControlPoints = () => {
   const [checkpointsData, setCheckpointsData] = useState({});
@@ -36,8 +33,25 @@ const ControlPoints = () => {
       );
 
       const results = await Promise.all(promises);
+
       const organizedData = results.reduce((acc, runners, index) => {
-        acc[checkpoints[index].label] = runners;
+        const checkpoint = checkpoints[index];
+        const checkpointLabel = checkpoint.label;
+
+        if (
+          ["Start", "Checkpoint 3/5", "Finish"].includes(
+            checkpointLabel
+          )
+        ) {
+          // Filter only 42K runners for Start, CP1, CP5, and Finish
+          acc[checkpointLabel] = runners.filter(
+            (runner) => runner.runner_details.category === "21K"
+          );
+        } else {
+          // Keep all runners for CP2, CP3, and CP4
+          acc[checkpointLabel] = runners;
+        }
+
         return acc;
       }, {});
 
@@ -49,7 +63,7 @@ const ControlPoints = () => {
 
   return (
     <div className="p-4 bg-gray-100 min-h-screen text-black">
-      <h1 className="text-2xl font-bold text-center mb-6">Race ALL CP LOG</h1>
+      <h1 className="text-2xl font-bold text-center mb-6">Race 21K</h1>
 
       {/* Horizontal Scrolling Wrapper */}
       <div className="overflow-x-auto min-h-screen">
