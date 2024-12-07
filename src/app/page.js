@@ -30,7 +30,7 @@ const ControlPoints = () => {
   const fetchDataForCheckpoint = async (checkpointNumber, page) => {
     try {
       const response = await fetch(
-        `https://racetrack.himalayancreatives.com/api/race-timings/?size=10&checkpoint_number=${checkpointNumber}&page=${page}`
+        `https://racetrack.himalayancreatives.com/api/race-timings/?page_size=200&page1&checkpoint_number=${checkpointNumber}&page=${page}`
       );
       const data = await response.json();
       return {
